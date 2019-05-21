@@ -83,56 +83,51 @@ def create_app():
         import requests
         import re
         import urllib.request
+
         url = "http://github.com/996icu/996.ICU"
         black = "/tree/master/blacklist"
-        url_black = url+black
+        url_black = url + black
         html = requests.get(url_black)
         txt = html.text
         str = ''
         for i in txt:
             str += i
-        # print(str)
         pattern = re.compile(r'<td align="center">.*</td>')
         result0 = pattern.findall(str)
-        # print(result0)
         result0 = result0[35::]
-        flag = 1#每五段一个公司
-        res_lst=[]#结果
+        # for i in result0:
+        #     print(i)
+        # print(len(result0))
+        res_lst = []  # 结果
         pattern_city = re.compile(r'<td align="center">.*</td>')
-        for i in result0:
+
+        def get_info_0(str):
+            pattern = re.compile(r'<td align="center">(.*)</td>')
+            r = pattern.findall(str)
+            if r == []:
+                return None
+            return r[0]
+
+        def get_info_1(str):
+            pattern = re.compile(r'<.*><.*>(.*)</a></td>')
+            r = pattern.findall(str)
+            if r == []:
+                pattern = re.compile(r'<.*>(.*)</td>')
+                r = pattern.findall(str)
+            return r[0]
+
+        for i in range(160):
             dic = {}
-            if flag%1 == 0:
-                for k in range(len(str) - 2, -1, -1):
-                    if str[k] == '>':
-                        for l in range(k, len(str)):
-                            if str[l] == '<':
-                                s = str[k + 1:l]
-                dic["city"] = s
-            if flag%2 == 0:
-                for k in range(len(str) - 2, -1, -1):
-                    if str[k] == '>':
-                        for l in range(k, len(str)):
-                            if str[l] == '<':
-                                s = str[k + 1:l]
-                dic["company"] = s
-            if flag%3 == 0:
-                for k in range(len(str) - 2, -1, -1):
-                    if str[k] == '>':
-                        for l in range(k, len(str)):
-                            if str[l] == '<':
-                                s = str[k + 1:l]
-                dic["exposure_time"] = s
-            if flag%4 == 0:
-                for k in range(len(str) - 2, -1, -1):
-                    if str[k] == '>':
-                        for l in range(k, len(str)):
-                            if str[l] == '<':
-                                s = str[k + 1:l]
-                dic["description"] = s
-            flag += 1
-            res_lst += dic
-        js =json.dumps(res_lst)
-        return js
+            for l in range(5):
+                # print(l)
+                if (l + 1) % 5 == 1:
+                    dic["city"] = get_info_0(result0[i * 5 + l])
+                if (l + 1) % 5 == 2:
+                    dic["company"] = get_info_1(result0[i * 5 + l])
+                if (l + 1) % 5 == 3:
+                    dic["exposure_time"] = get_info_0(result0[i * 5 + l])
+                if (l + 1) % 5 == 4:
+                    dic["description"] = get_info_0(result0[i * 5 + l])
 
         
         pass
