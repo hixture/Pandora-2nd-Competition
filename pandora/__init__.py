@@ -49,6 +49,8 @@ def create_app():
         from PIL import Image
         import base64
         import hashlib
+        import requests
+        r =
         data = open("img.txt", "r").read()
         image = base64.b64decode(data)
         filename = 'image.png'
@@ -116,7 +118,7 @@ def create_app():
                 r = pattern.findall(str)
             return r[0]
 
-        for i in range(160):
+        for i in range(int(len(result0)/5)):
             dic = {}
             for l in range(5):
                 # print(l)
@@ -128,7 +130,8 @@ def create_app():
                     dic["exposure_time"] = get_info_0(result0[i * 5 + l])
                 if (l + 1) % 5 == 4:
                     dic["description"] = get_info_0(result0[i * 5 + l])
-
+            res_lst.append(json.dumps(dic))
+        return res_lst
         
         pass
 
