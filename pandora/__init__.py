@@ -1,5 +1,6 @@
 from flask import Flask, send_file, render_template
 import json
+from lxml import etree
 
 
 def create_app():
@@ -81,7 +82,8 @@ def create_app():
         """
         import requests
         url = "github.com/996icu/996.ICU"
-
+        r = requests.get(url=url)
+        
         pass
 
     return app
