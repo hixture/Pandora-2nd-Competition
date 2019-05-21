@@ -66,7 +66,7 @@ def create_app():
         with open('temp.png', "rb") as f:
             base64_data = base64.b64encode(f.read())
             md5_data = hashlib.md5(f.read()).hexdigest()
-        res = {"md5": md5_data, "base64_picture": base64_data}
+        res = {"md5": str(md5_data), "base64_picture": (base64_data)}
         js = json.dumps(res)
         return js
 
@@ -87,6 +87,7 @@ def create_app():
         import requests
         import re
         from flask import jsonify
+        from flask import Response
         import urllib.request
         import json
         import urllib.request
@@ -135,8 +136,8 @@ def create_app():
                     dic["exposure_time"] = get_info_0(result0[i * 5 + l])
                 if (l + 1) % 5 == 4:
                     dic["description"] = get_info_0(result0[i * 5 + l])
-            res_lst.append(json.dumps(dic))
-        return jsonify(res_lst)
+            res_lst.append(dic)
+        return Response(json.dumps(res_lst),  mimetype='application/json')
         
         pass
 
