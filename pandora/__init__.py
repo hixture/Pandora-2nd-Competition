@@ -53,11 +53,10 @@ def create_app():
         filename = 'image.png'
         with open(filename, 'wb') as f:
             f.write(image)
-        img = Image.open("image.png", "r")
-        img = img.resize((100, 100), Image.ANTIALIAS)
+        img = Image.open("image.png")
+        img.resize((100, 100), Image.ANTIALIAS)
         filename_re = 'image_re.png'
-        with open(filename_re, 'wb') as f:
-            f.write(img)
+        img.save()
         with open(filename_re, "r") as f:
             base64_data = base64.b64encode(f.read())
             md5_data = hashlib.md5(f.read())
@@ -81,8 +80,16 @@ def create_app():
         }, ...]
         """
         import requests
-        url = "github.com/996icu/996.ICU"
-        r = requests.get(url=url)
+        import urllib.request
+        url = "http://github.com/996icu/996.ICU"
+        black = "/tree/master/blacklist"
+        url_black = url+black
+        page = urllib.request.urlopen(url_black)
+        html = page.read().decode("utf-8")
+        print(html)
+        r = requests.get(url=url_black)
+
+
         
         pass
 
