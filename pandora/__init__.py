@@ -21,6 +21,7 @@ def create_app():
         以此项目中的404.html作为此Web Server工作时的404错误页
         """
         return render_template("404.html")
+        pass
 
     # TODO: 完成接受 HTTP_URL 的 picture_reshape
     # TODO: 完成接受相对路径的 picture_reshape
@@ -56,11 +57,11 @@ def create_app():
         img = Image.open("image.png")
         img.resize((100, 100), Image.ANTIALIAS)
         filename_re = 'image_re.png'
-        img.save()
-        with open(filename_re, "r") as f:
+        img.save('./temp.png')
+        with open('temp.png', "rb") as f:
             base64_data = base64.b64encode(f.read())
-            md5_data = hashlib.md5(f.read())
-
+            md5_data = hashlib.md5(f.read()).hexdigest()
+        res = {"md5": md5_data, "base64_picture": base64_data}
         res = {"md5": md5_data, "base64_picture": base64_data}
         js = json.dumps(res)
         return js
@@ -80,15 +81,58 @@ def create_app():
         }, ...]
         """
         import requests
+        import re
         import urllib.request
         url = "http://github.com/996icu/996.ICU"
         black = "/tree/master/blacklist"
         url_black = url+black
-        page = urllib.request.urlopen(url_black)
-        html = page.read().decode("utf-8")
-        print(html)
-        r = requests.get(url=url_black)
-
+        html = requests.get(url_black)
+        txt = html.text
+        str = ''
+        for i in txt:
+            str += i
+        # print(str)
+        pattern = re.compile(r'<td align="center">.*</td>')
+        result0 = pattern.findall(str)
+        # print(result0)
+        result0 = result0[35::]
+        flag = 1#每五段一个公司
+        res_lst=[]#结果
+        pattern_city = re.compile(r'<td align="center">.*</td>')
+        for i in result0:
+            dic = {}
+            if flag%1 == 0:
+                for k in range(len(str) - 2, -1, -1):
+                    if str[k] == '>':
+                        for l in range(k, len(str)):
+                            if str[l] == '<':
+                                s = str[k + 1:l]
+                dic["city"] = s
+            if flag%2 == 0:
+                for k in range(len(str) - 2, -1, -1):
+                    if str[k] == '>':
+                        for l in range(k, len(str)):
+                            if str[l] == '<':
+                                s = str[k + 1:l]
+                dic["company"] = s
+            if flag%3 == 0:
+                for k in range(len(str) - 2, -1, -1):
+                    if str[k] == '>':
+                        for l in range(k, len(str)):
+                            if str[l] == '<':
+                                s = str[k + 1:l]
+                dic["exposure_time"] = s
+            if flag%4 == 0:
+                for k in range(len(str) - 2, -1, -1):
+                    if str[k] == '>':
+                        for l in range(k, len(str)):
+                            if str[l] == '<':
+                                s = str[k + 1:l]
+                dic["description"] = s
+            flag += 1
+            res_lst += dic
+        js =json.dumps(res_lst)
+        return js
 
         
         pass
