@@ -20,7 +20,7 @@ def create_app():
         """
         以此项目中的404.html作为此Web Server工作时的404错误页
         """
-        return render_template("404.html"),404
+        return render_template("404.html"), 404
         pass
 
     # TODO: 完成接受 HTTP_URL 的 picture_reshape
@@ -50,20 +50,22 @@ def create_app():
         import base64
         import hashlib
         import requests
-        r =
-        data = open("img.txt", "r").read()
-        image = base64.b64decode(data)
-        filename = 'image.png'
+        qs = requests.query_string
+        if qs[0:4] == 'http':
+            b64 = requests.get(qs).text
+        else:
+            with open(qs,"rb") as f:
+                b64 = f.read()
+        image = base64.b64decode(b64)
+        filename = 'temp.png'
         with open(filename, 'wb') as f:
             f.write(image)
         img = Image.open("image.png")
         img.resize((100, 100), Image.ANTIALIAS)
-        filename_re = 'image_re.png'
         img.save('./temp.png')
         with open('temp.png', "rb") as f:
             base64_data = base64.b64encode(f.read())
             md5_data = hashlib.md5(f.read()).hexdigest()
-        res = {"md5": md5_data, "base64_picture": base64_data}
         res = {"md5": md5_data, "base64_picture": base64_data}
         js = json.dumps(res)
         return js
