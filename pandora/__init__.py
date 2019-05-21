@@ -86,6 +86,9 @@ def create_app():
         """
         import requests
         import re
+        from flask import jsonify
+        import urllib.request
+        import json
         import urllib.request
 
         url = "http://github.com/996icu/996.ICU"
@@ -133,7 +136,7 @@ def create_app():
                 if (l + 1) % 5 == 4:
                     dic["description"] = get_info_0(result0[i * 5 + l])
             res_lst.append(json.dumps(dic))
-        return res_lst
+        return jsonify(res_lst)
         
         pass
 
