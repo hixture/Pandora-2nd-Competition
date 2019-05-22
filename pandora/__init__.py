@@ -51,7 +51,7 @@ def create_app():
         import hashlib
         import requests
         from flask import request
-        qs = request.query_string
+        qs = request.args.get('b64_url')
         if qs[0:4] == 'http':
             b64 = requests.get(qs).text
         else:
