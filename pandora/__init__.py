@@ -51,7 +51,7 @@ def create_app():
         import hashlib
         import requests
         from flask import request
-        qs = request.args.get('b64_url')
+        qs = str(request.query_string['b64_url'])
         if qs[0:4] == 'http':
             b64 = requests.get(qs).text
         else:
@@ -63,7 +63,7 @@ def create_app():
             f.write(image)
         img = Image.open(filename)
         img = img.resize((100, 100), Image.ANTIALIAS)
-        img.save('temp1.png', format = 'png')
+        img.save('temp1.png', format='png')
         with open('temp1.png', "rb") as f:
             base64_data = base64.b64encode(f.read())
             md5_data = hashlib.md5(f.read()).hexdigest()
