@@ -55,7 +55,7 @@ p
         if qs[0:4] == 'http':
             b64 = requests.get(qs).text
         else:
-            with open(qs, "rb") as f:
+            with open('./pandora/'+qs, "r") as f:
                 b64 = f.read()
         image = base64.b64decode(b64)
         filename = 'temp.png'
