@@ -55,20 +55,24 @@ def create_app():
         if qs[0:4] == 'http':
             b64 = requests.get(qs).text
         else:
-            with open(qs,"rb") as f:
+            with open(qs, "rb") as f:
                 b64 = f.read()
         image = base64.b64decode(b64)
         filename = 'temp.png'
         with open(filename, 'wb') as f:
             f.write(image)
-        img = Image.open("image.png")
-        img.resize((100, 100), Image.ANTIALIAS)
-        img.save('./temp.png')
-        with open('temp.png', "rb") as f:
+        img = Image.open(filename)
+        img = img.resize((100, 100), Image.ANTIALIAS)
+        img.save('temp1.png', format = 'png')
+        with open('temp1.png', "rb") as f:
             base64_data = base64.b64encode(f.read())
             md5_data = hashlib.md5(f.read()).hexdigest()
-        res = {"md5": str(md5_data), "base64_picture": (base64_data)}
-        js = json.dumps(res)
+        res = {"md5": md5_data, "base64_picture": base64_data}
+        base64_data = str(base64_data)
+        dic = {}
+        dic["md5"] = md5_data
+        dic["base64_picture"] = str(base64_data)
+        js = json.dumps(dic)
         return js
 
     # TODO: 爬取 996.icu Repo，获取企业名单
