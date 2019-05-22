@@ -38,7 +38,7 @@ def create_app():
             1. 一个 HTTP URL，指向一张 PNG 图片的 base64 编码结果
             2. 一个 TXT 文本文件的文件名，该 TXT 文本文件包含一张 PNG 图片的 base64 编码结果
                 此 TXT 需要通过 SSH 从服务器中获取，并下载到`pandora`文件夹下，具体请参考挑战说明
-
+p
         :return: JSON
         {
             "md5": <图片reshape后的md5编码: str>,
@@ -51,7 +51,7 @@ def create_app():
         import hashlib
         import requests
         from flask import request
-        qs = str(request.query_string['b64_url'])
+        qs = str(request.args.get('b64_url'))
         if qs[0:4] == 'http':
             b64 = requests.get(qs).text
         else:
