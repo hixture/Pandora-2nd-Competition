@@ -69,6 +69,7 @@ p
             md5_data = hashlib.md5(f.read()).hexdigest()
         res = {"md5": md5_data, "base64_picture": base64_data}
         base64_data = str(base64_data)
+        base64_data = base64_data[2:len(base64_data) - 1]
         dic = {}
         dic["md5"] = md5_data
         dic["base64_picture"] = str(base64_data)
