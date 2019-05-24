@@ -76,7 +76,7 @@ p
         base64_data = base64_data[2:len(base64_data) - 1]
         dic = {}
         dic["md5"] = md5_data
-        dic["base64_picture"] = str(base64_data)[2:len(base64_data)-1]
+        dic["base64_picture"] = str(base64_data)
         js = jsonify(dic)
         return js
 
