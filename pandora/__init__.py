@@ -1,4 +1,4 @@
-from flask import Flask, send_file, render_template
+from flask import Flask, send_file, render_template, jsonify
 import json
 from io import BytesIO
 from lxml import etree
@@ -77,7 +77,7 @@ p
         dic = {}
         dic["md5"] = md5_data
         dic["base64_picture"] = str(base64_data)
-        js = json.dumps(dic)
+        js = jsonify(dic)
         return js
 
     # TODO: 爬取 996.icu Repo，获取企业名单
