@@ -1,5 +1,6 @@
 from flask import Flask, send_file, render_template
 import json
+from io import BytesIO
 from lxml import etree
 
 
@@ -58,18 +59,21 @@ p
             with open('./pandora/'+qs, "r") as f:
                 b64 = f.read()
         image = base64.b64decode(b64)
-        filename = 'temp.png'
-        with open(filename, 'wb') as f:
-            f.write(image)
-        img = Image.open(filename)
+        # filename = 'temp.png'
+        # with open(filename, 'wb') as f:
+        #     f.write(image)
+        img = Image.open(BytesIO(image))
         img = img.resize((100, 100), Image.ANTIALIAS)
-        img.save('temp1.png', format='png')
-        with open('temp1.png', "rb") as f:
-            base64_data = base64.b64encode(f.read())
-            md5_data = hashlib.md5(f.read()).hexdigest()
+        result = BytesIO()
+        img.save(result, format='png')
+        # with open('temp1.png', "rb") as f:
+        f =result.getvalue()
+        base64_data = base64.b64encode(f)
+        md5_data = hashlib.md5(f).hexdigest()
         res = {"md5": md5_data, "base64_picture": base64_data}
+        md5_data = str(md5_data)
         base64_data = str(base64_data)
-        base64_data = base64_data[2:len(base64_data) - 1]
+        # base64_data = base64_data[2:len(base64_data) - 1]
         dic = {}
         dic["md5"] = md5_data
         dic["base64_picture"] = str(base64_data)
